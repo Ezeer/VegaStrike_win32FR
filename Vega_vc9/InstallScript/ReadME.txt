@@ -1,3 +1,0 @@
-Install scripts for:
-
-InnoSetup
