@@ -2,6 +2,9 @@
 #define __VS_GLOBALS_H_
 #include "config.h"
 #include <vector>
+/*
+Introduction of gettext for windows
+*/
 
 #include "universe_generic.h"
 #include "command.h"
