@@ -196,7 +196,9 @@ bool CallbackWorker_Backspace( unsigned int ch,GameCockpit *gcp)
 
 bool CallbackWorker_Enter( unsigned int ch,GameCockpit *gcp)
 {
- if (gcp->textMessage.length() != 0) 
+if (ch == WSK_RETURN || ch == WSK_KP_ENTER)
+ {
+  if (gcp->textMessage.length() != 0) 
   {
   std::string name = gcp->savegame->GetCallsign();
    //NETWORK SEND TO
@@ -218,7 +220,7 @@ bool CallbackWorker_Enter( unsigned int ch,GameCockpit *gcp)
                         cmd  = gcp->textMessage.substr( 1, space-1 );
                         args = gcp->textMessage.substr( space+1 );
                       } 
-                      else
+            else
                       {
                         cmd = gcp->textMessage.substr( 1 );
                         //Send custom message to itself.
@@ -229,9 +231,19 @@ bool CallbackWorker_Enter( unsigned int ch,GameCockpit *gcp)
            } 
            else 
            {waszero = true; } gcp->textMessage = "";
-      return waszero; 
+     
+      } return waszero; 
 }
-//bool CallbackWorker_Slash( unsigned int ch,GameCockpit *gcp){}
+bool CallbackWorker_Ascii( unsigned int ch,GameCockpit *gcp, unsigned int code)
+{
+ if( code != 0 && code <= 127) 
+ {
+  char newstr[2] = {(char) code, 0};
+  gcp->textMessage += newstr;
+  return true ;
+ }
+ else return false ;
+}
 void TextMessageCallback( unsigned int ch, unsigned int mod, bool release, int x, int y )
 {
     GameCockpit *gcp = static_cast< GameCockpit* > ( _Universe->AccessCockpit( textmessager ) );
@@ -256,14 +268,14 @@ void TextMessageCallback( unsigned int ch, unsigned int mod, bool release, int x
         ( ( WSK_MOD_LSHIFT == (mod&WSK_MOD_LSHIFT) ) || ( WSK_MOD_RSHIFT == (mod&WSK_MOD_RSHIFT) ) ) ? shiftup(
             ch ) : ch;
     //why this check ? when textmessager can be == or >= or > ?        
-    if ( textmessager < _Universe->numPlayers() ) 
+  if ( textmessager < _Universe->numPlayers() ) 
        {
         /*deprecated replaced by worker
         if (ch == WSK_BACKSPACE || ch == WSK_DELETE) 
         {
             gcp->textMessage = gcp->textMessage.substr( 0, gcp->textMessage.length()-1 );
         } */
-        CallbackWorker_Backspace( ch,gcp);
+        if(CallbackWorker_Backspace( ch,gcp)){}
          /*Deprecated replaced by 
          ///bool CallbackWorker_Enter( unsigned int ch,GameCockpit *gcp)
          
@@ -296,11 +308,67 @@ void TextMessageCallback( unsigned int ch, unsigned int mod, bool release, int x
            {waszero = true; }
            gcp->textMessage = "";
         } */ 
-        if(CallbackWorker_Enter(ch,gcp))
+         else if(CallbackWorker_Enter(ch,gcp))
             {
             //MY HACK HERE ?
             }
-          else if (code != 0 && code <= 127) {
+         else if(CallbackWorker_Ascii(ch,gcp,code)) 
+          {
+           //MY HACK HERE TOO ?
+          }
+       }
+    else
+     {
+        RestoreKB();
+        gcp->editingTextMessage = false;
+     }
+}
+void TextMessageCallback0( unsigned int ch, unsigned int mod, bool release, int x, int y )
+{
+ GameCockpit *gcp = static_cast< GameCockpit* > ( _Universe->AccessCockpit( textmessager ) );
+    gcp->editingTextMessage = true;
+    /*if ( ( release
+          && (waszero || ch == WSK_KP_ENTER || ch == WSK_ESCAPE) ) || ( release == false && (ch == ']' || ch == '[') ) ) {
+        waszero = false;
+        gcp->editingTextMessage = false;
+        RestoreKB();
+    }*/
+    CallbackWorker_Editcheck(ch,mod,release,gcp );
+    if ( release || (ch == ']' || ch == '[') ) return;
+    unsigned int code =
+        ( ( WSK_MOD_LSHIFT == (mod&WSK_MOD_LSHIFT) ) || ( WSK_MOD_RSHIFT == (mod&WSK_MOD_RSHIFT) ) ) ? shiftup(
+            ch ) : ch;
+    
+    if ( textmessager < _Universe->numPlayers() ) {
+        if (ch == WSK_BACKSPACE || ch == WSK_DELETE) {
+            gcp->textMessage = gcp->textMessage.substr( 0, gcp->textMessage.length()-1 );
+        } else if (ch == WSK_RETURN || ch == WSK_KP_ENTER)
+         {
+            if (gcp->textMessage.length() != 0) {
+                std::string name = gcp->savegame->GetCallsign();
+                if (Network != NULL) {
+                    Unit *par = gcp->GetParent();
+                    if (0 && par)
+                        name = getUnitNameAndFgNoBase( par );
+                    Network[textmessager].textMessage( gcp->textMessage );
+                } else if (gcp->textMessage[0] == '/') {
+                    string cmd;
+                    string args;
+                    std::string::size_type space = gcp->textMessage.find( ' ' );
+                    if (space) {
+                        cmd  = gcp->textMessage.substr( 1, space-1 );
+                        args = gcp->textMessage.substr( space+1 );
+                    } else {
+                        cmd = gcp->textMessage.substr( 1 );
+                        //Send custom message to itself.
+                    }
+                    UniverseUtil::receivedCustom( textmessager, true, cmd, args, string() );
+                }
+                waszero = false;
+            } else {waszero = true; } gcp->textMessage = "";
+        } 
+        else if (code != 0 && code <= 127) 
+        {
             char newstr[2] = {(char) code, 0};
             gcp->textMessage += newstr;
         }
@@ -309,7 +377,7 @@ void TextMessageCallback( unsigned int ch, unsigned int mod, bool release, int x
         gcp->editingTextMessage = false;
     }
 }
-
+ 
 void TextMessageKey( const KBData&, KBSTATE newState )
 {
     if (newState == PRESS) {
