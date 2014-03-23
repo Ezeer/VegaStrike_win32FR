@@ -1736,8 +1736,6 @@ void DoCockpitKeys()
     CockpitKeys::Pan( KBData(), PRESS );
     CockpitKeys::Inside( KBData(), PRESS );
     
-    
-    
 }
 
 void GameCockpit::NavScreen( const KBData&, KBSTATE k )

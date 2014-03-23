@@ -35,10 +35,10 @@ LeakVector< Mission* >active_missions;
 
 vs_options game_options;
 
-void VSExit( int code )
+void VSExit( int code )// code is not used ? why ? ezee
 {
     VSServer->closeAllSockets();
-    exit( 1 );
+    exit( 1 );//code not used ?
 }
 
 int main( int argc, char **argv )

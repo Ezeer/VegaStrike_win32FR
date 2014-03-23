@@ -171,25 +171,106 @@ namespace CockpitKeys
 unsigned int textmessager = 0;
 static bool  waszero = false;
 
+///TextMsgCbckWorker functions are workers for the TextMessageCallback
+///They just do specific tasks and help to have the code more readable
+///ezee
+void CallbackWorker_Editcheck( unsigned int ch, unsigned int mod, bool release,GameCockpit *gcp )
+{
+if ( (release && (waszero || ch == WSK_KP_ENTER || ch == WSK_ESCAPE)) || ( release == false && (ch == ']' || ch == '[') ) ) 
+  {
+        waszero = false;
+        gcp->editingTextMessage = false;
+        RestoreKB();
+    }
+}
+
+bool CallbackWorker_Backspace( unsigned int ch,GameCockpit *gcp)
+{
+  if (ch == WSK_BACKSPACE || ch == WSK_DELETE) 
+     {
+      gcp->textMessage = gcp->textMessage.substr( 0, gcp->textMessage.length()-1 );
+      return true;
+     }
+     return false;
+}
+
+bool CallbackWorker_Enter( unsigned int ch,GameCockpit *gcp)
+{
+ if (gcp->textMessage.length() != 0) 
+  {
+  std::string name = gcp->savegame->GetCallsign();
+   //NETWORK SEND TO
+   if (Network != NULL) 
+     {
+      Unit *par = gcp->GetParent();
+      if (0 && par)
+      name = getUnitNameAndFgNoBase( par );
+      Network[textmessager].textMessage( gcp->textMessage );
+     } 
+     else if 
+          (gcp->textMessage[0] == '/')
+           {
+           string cmd;
+           string args;
+           std::string::size_type space = gcp->textMessage.find( ' ' );
+           if (space) 
+                      {
+                        cmd  = gcp->textMessage.substr( 1, space-1 );
+                        args = gcp->textMessage.substr( space+1 );
+                      } 
+                      else
+                      {
+                        cmd = gcp->textMessage.substr( 1 );
+                        //Send custom message to itself.
+                      }
+                    UniverseUtil::receivedCustom( textmessager, true, cmd, args, string() );
+                }
+                waszero = false;
+           } 
+           else 
+           {waszero = true; } gcp->textMessage = "";
+      return waszero; 
+}
+//bool CallbackWorker_Slash( unsigned int ch,GameCockpit *gcp){}
 void TextMessageCallback( unsigned int ch, unsigned int mod, bool release, int x, int y )
 {
     GameCockpit *gcp = static_cast< GameCockpit* > ( _Universe->AccessCockpit( textmessager ) );
-    gcp->editingTextMessage = true;
+    gcp->editingTextMessage = true;//flag that mean what ? 
+    ///the following code could be optimized 
+    ///or just be more readable
+    ///As i plan to hack it , i will try to organise it better
+   /*deprecated replaced by worker
+   
     if ( ( release
           && (waszero || ch == WSK_KP_ENTER || ch == WSK_ESCAPE) ) || ( release == false && (ch == ']' || ch == '[') ) ) {
         waszero = false;
         gcp->editingTextMessage = false;
         RestoreKB();
     }
+    */
+    CallbackWorker_Editcheck(ch,mod,release,gcp );
+     ///this light instruction could be inline func ?
     if ( release || (ch == ']' || ch == '[') ) return;
+    //check the key modifier
     unsigned int code =
         ( ( WSK_MOD_LSHIFT == (mod&WSK_MOD_LSHIFT) ) || ( WSK_MOD_RSHIFT == (mod&WSK_MOD_RSHIFT) ) ) ? shiftup(
             ch ) : ch;
-    if ( textmessager < _Universe->numPlayers() ) {
-        if (ch == WSK_BACKSPACE || ch == WSK_DELETE) {
+    //why this check ? when textmessager can be == or >= or > ?        
+    if ( textmessager < _Universe->numPlayers() ) 
+       {
+        /*deprecated replaced by worker
+        if (ch == WSK_BACKSPACE || ch == WSK_DELETE) 
+        {
             gcp->textMessage = gcp->textMessage.substr( 0, gcp->textMessage.length()-1 );
-        } else if (ch == WSK_RETURN || ch == WSK_KP_ENTER) {
-            if (gcp->textMessage.length() != 0) {
+        } */
+        CallbackWorker_Backspace( ch,gcp);
+         /*Deprecated replaced by 
+         ///bool CallbackWorker_Enter( unsigned int ch,GameCockpit *gcp)
+         
+         if (ch == WSK_RETURN || ch == WSK_KP_ENTER) 
+         {
+            if (gcp->textMessage.length() != 0) 
+            {
                 std::string name = gcp->savegame->GetCallsign();
                 if (Network != NULL) {
                     Unit *par = gcp->GetParent();
@@ -210,8 +291,16 @@ void TextMessageCallback( unsigned int ch, unsigned int mod, bool release, int x
                     UniverseUtil::receivedCustom( textmessager, true, cmd, args, string() );
                 }
                 waszero = false;
-            } else {waszero = true; } gcp->textMessage = "";
-        } else if (code != 0 && code <= 127) {
+            } 
+           else 
+           {waszero = true; }
+           gcp->textMessage = "";
+        } */ 
+        if(CallbackWorker_Enter(ch,gcp))
+            {
+            //MY HACK HERE ?
+            }
+          else if (code != 0 && code <= 127) {
             char newstr[2] = {(char) code, 0};
             gcp->textMessage += newstr;
         }
@@ -227,7 +316,12 @@ void TextMessageKey( const KBData&, KBSTATE newState )
         static bool chat_only_in_network =
             XMLSupport::parse_bool( vs_config->getVariable( "network", "chat_only_in_network", "false" ) );
         if ( (Network == NULL) && chat_only_in_network )
-            return;
+            {
+            //new hack by ezee to create a console 
+             winsys_set_keyboard_func( TextMessageCallback );
+             textmessager = _Universe->CurrentCockpit();
+             return;
+            }
         winsys_set_keyboard_func( TextMessageCallback );
         textmessager = _Universe->CurrentCockpit();
     }
@@ -240,14 +334,11 @@ void TextMessageKey( const KBData&, KBSTATE newState )
 
 void QuitNow(Gamestate state)
 {
-  //menu stuff
-  if(g_game.state==MENU)
-  {
-  
-  UniverseUtil::startMenuInterface(false);
-   return;
-  }
-    if (!cleanexit)
+
+ switch(state)
+ {
+ case QUIT:
+ if (!cleanexit)
     {
         cleanexit = true;
         if (Network == NULL && game_options.write_savegame_on_exit)
@@ -262,6 +353,35 @@ void QuitNow(Gamestate state)
         }
         VSExit(state);//this way we have end to menu enabled
     }
+ break;
+ case MENU:
+  UniverseUtil::startMenuInterface(false);
+ break;
+ }
+ /*
+  //menu stuff
+  if(g_game.state==MENU)
+  {
+  
+  UniverseUtil::startMenuInterface(false);
+   return;
+  }
+  
+    if (!cleanexit)
+    {
+        cleanexit = true;
+        if (Network == NULL && game_options.write_savegame_on_exit)
+            _Universe->WriteSaveGame( true );              //gotta do important stuff first
+        for (unsigned int i = 0; i < active_missions.size(); i++)
+            if (active_missions[i])
+                active_missions[i]->DirectorEnd();
+        if (forcefeedback)
+        {
+            delete forcefeedback;
+            forcefeedback = NULL;
+        }
+        VSExit(state);//this way we have end to menu enabled
+    }*/
 }
 //NEW MENU SYSTEM BY EZEE
 void Menu(const KBData&, KBSTATE newState)
