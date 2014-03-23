@@ -123,6 +123,8 @@ void setup_game_data()
     g_game.fov = 78;
     g_game.MouseSensitivityX = 2;
     g_game.MouseSensitivityY = 4;
+    //Ezee addon
+    g_game.state=LOAD;
 }
 VegaConfig * createVegaConfig( const char *file )
 {
@@ -137,10 +139,18 @@ std::string ParseCommandLine(int argc, char ** CmdLine);
 int readCommandLineOptions(int argc, char ** argv);
 
 // FIXME: Code should throw exception instead of calling exit
+//TWEAKED BY EZEE , A SWITCH TO MENU
 void VSExit( int code)
 {
-    Music::CleanupMuzak();
-    winsys_exit( code );
+ switch(code)
+             {case 0:
+              Music::CleanupMuzak();
+              winsys_exit( code );break;
+              case 1:
+              break;
+              }
+              
+    
 }
 
 void cleanup( void )

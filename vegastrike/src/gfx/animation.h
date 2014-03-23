@@ -95,5 +95,22 @@ public: Animation();
     void SetOrientation( const Vector &p, const Vector &q, const Vector &r );
 };
 
+///*EZEE PART
+///*
+struct S_AnimOptions 
+{
+bool Up; // everybody understand that , even a french
+bool Close;// everybody understand that , even a french
+bool Alpha;// everybody understand that , even a french
+};
+
+class Animation2 : public Animation
+{
+public :
+Animation2();
+virtual ~Animation2();
+
+S_AnimOptions options ;
+};
 #endif
 

@@ -9,7 +9,7 @@
 #include "basecomputer.h"
 #include "main_loop.h"
 #include "music.h"
-
+#include "vs_globals.h" //added by ezee
 #include <boost/version.hpp>
 #if BOOST_VERSION != 102800
 #include <boost/python.hpp>
@@ -752,7 +752,7 @@ void refreshBaseComputerUI( const Cargo *carg )
 
 void ExitGame()
 {
-    CockpitKeys::QuitNow();
+    CockpitKeys::QuitNow(g_game.state   );//modified by ezee QUIT MENU MOAD RUNNING
 }
 }
 

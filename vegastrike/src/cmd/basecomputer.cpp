@@ -5951,7 +5951,8 @@ bool BaseComputer::showShipStats( const EventCommandId &command, Control *contro
 
 namespace CockpitKeys
 {
-void QuitNow();
+//void QuitNow();
+void QuitNow(Gamestate state);//modified by ezee for menu
 }
 
 //Create the window and controls for the Options Menu.
@@ -6031,7 +6032,7 @@ bool BaseComputer::LoadSaveQuitConfirm::processWindowCommand( const EventCommand
 
 bool BaseComputer::actionConfirmedQuitGame()
 {
-    CockpitKeys::QuitNow();
+    CockpitKeys::QuitNow(g_game.state);//new version by ezee
     return true;
 }
 

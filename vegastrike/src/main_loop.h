@@ -4,6 +4,7 @@
 #include "cmd/unit_generic.h"
 void bootstrap_draw( const std::string &message, Animation *SplashScreen = NULL );
 
+
 namespace CockpitKeys
 {
 void SkipMusicTrack( const KBData&, KBSTATE newState );
@@ -46,9 +47,12 @@ void Pan( const KBData&, KBSTATE newState );
 void PanTarget( const KBData&, KBSTATE newState );
 void ViewTarget( const KBData&, KBSTATE newState );
 void OutsideTarget( const KBData&, KBSTATE newState );
-void Quit( const KBData&, KBSTATE newState );
+void Quit( const KBData&, KBSTATE newState );//deprecated with new menu ?
 void TextMessageKey( const KBData&, KBSTATE newState );
-void QuitNow();
+///QuitNow()could be reused with a state 
+///so lets do it now . ezee
+void QuitNow(Gamestate state);
+void Menu(const KBData&, KBSTATE newState); // back to menu now !! by ezee
 }
 
 struct SavedUnits;

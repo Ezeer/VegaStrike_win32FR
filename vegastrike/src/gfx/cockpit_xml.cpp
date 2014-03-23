@@ -78,7 +78,8 @@ enum Names
     G_LEFT,
     G_RIGHT,
     G_TIME,
-    ALPH
+    ALPH,
+    MASK //by ezee
 };
 
 const EnumMap::Pair element_names[] = {
@@ -87,6 +88,7 @@ const EnumMap::Pair element_names[] = {
     EnumMap::Pair( "Radar",             RADAR ),
     EnumMap::Pair( "RearRadar",         REARRADAR ),
     EnumMap::Pair( "LeftVDU",           LVDU ),
+    EnumMap::Pair( "Mask",              MASK ),//by ezee
     EnumMap::Pair( "VDU",               AVDU ),
     EnumMap::Pair( "RightVDU",          RVDU ),
     EnumMap::Pair( "Panel",             PANEL ),
@@ -242,6 +244,7 @@ void GameCockpit::beginElement( const string &name, const AttributeList &attribu
     VSSprite *oldpit       = NULL;
     bool      replaced[4]  = {false, false, false, false};
     int       counter      = 0;
+   
     switch (elem)
     {
     case COCKPIT:
@@ -436,21 +439,27 @@ pastarmor8:
         break;
     case CROSSHAIRS:
     case PANEL:
-        if (elem == CROSSHAIRS) {
+        if (elem == CROSSHAIRS)
+         {
             if (Panel.size() == 0)
                 Panel.push_back( NULL );
-            if ( Panel.front() ) {
+            if ( Panel.front() ) 
+            {
                 delete Panel.front();
                 Panel.front() = NULL;
             }
             newsprite = &Panel.front();
-        } else {
+        } else
+         {
             if (Panel.size() == 0)              /* Create NULL crosshairs */
                 Panel.push_back( NULL );
             Panel.push_back( NULL );
             newsprite = &Panel.back();
-        }
+         }
         goto loadsprite;
+       case MASK:// a texture with transparency to draw over the coms
+       printf( "MASK is introduced by ezee !\n" );
+       goto loadsprite;
     case RADAR:
         newsprite = &radarSprites[0];
         goto loadsprite;

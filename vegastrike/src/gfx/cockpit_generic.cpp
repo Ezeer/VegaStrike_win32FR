@@ -84,21 +84,25 @@ void Cockpit::Init( const char *file, bool isDisabled )
     shakin         = 0;
     autopilot_time = 0;
     bool f404 = false;
-    if (file == NULL || strlen( file ) == 0) {
+    //case no file was given
+    if (file == NULL || strlen( file ) == 0) 
+    {
         if (isDisabled)
             file = "cockpit.cpt";
         else
             file = "disabled-cockpit.cpt";
         f404 = true;
     }
-    if (isDisabled == true) {
+    if (isDisabled == true) 
+    {
         std::string disname = std::string( "disabled-" )+file;
-        Init( disname.c_str() );
+        Init( disname.c_str() );//call again to retrieve the good filename
         return;
     }
     VSFile  f;
     VSError err = f.OpenReadOnly( file, CockpitFile );
-    if (err > Ok) {
+    if (err > Ok) 
+    {
         //File not found...
         if ( isDisabled == false && (string( file ).find( "disabled-" ) == string::npos) )
             Init( file, true );

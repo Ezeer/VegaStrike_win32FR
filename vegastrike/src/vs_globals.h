@@ -16,7 +16,7 @@ extern Universe *_Universe;
  *       extern GameUniverse _Universe;
  * #endif
  */
-
+enum Gamestate{QUIT,MENU,LOAD,RUNNING};//ADD BY EZEE
 extern void cleanup();
 extern void VSExit( int code );
 extern bool   STATIC_VARS_DESTROYED;
@@ -58,7 +58,8 @@ typedef struct
     float aspect;
     float difficulty;
     char  vsdebug;
-} game_data_t;
+    Gamestate state;//Added by ezee
+} game_data_t; //we could add a gamestate here so i did it
 
 extern game_data_t g_game;
 class Music;

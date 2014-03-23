@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="Mesher"
 	ProjectGUID="{513A290A-C77B-4F9D-AF72-F98009997AC7}"
 	RootNamespace="Mesher"
@@ -40,6 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="D:\program\VegaStrike_win32FR\vegastrike\src"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -109,7 +110,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="\;..\..\vegastrike\src;..\..\vegastrike\objconv\mesher;."
+				AdditionalIncludeDirectories="\;..\..\vegastrike\src;..\..\vegastrike\objconv\mesher;.;D:\program\VegaStrike_win32FR\vegastrike\boost\1_45"
 				PreprocessorDefinitions="NDEBUG;WIN32;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -244,11 +245,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\vegastrike\objconv\mesher\Converter.h"
+				RelativePath="..\..\vegastrike\objconv\mesher\PrecompiledHeaders\Converter.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\vegastrike\objconv\mesher\PrecompiledHeaders\Converter.h"
+				RelativePath="..\..\vegastrike\objconv\mesher\Converter.h"
 				>
 			</File>
 			<File

@@ -12,7 +12,9 @@
 #include "universe_util.h"
 #include <assert.h>
 
+
 typedef vsUMap< string, CCScript* >HardCodedMap;
+
 static HardCodedMap MakeHardCodedScripts()
 {
     HardCodedMap tmp;

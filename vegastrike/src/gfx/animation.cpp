@@ -51,7 +51,8 @@ bool AnimationsLeftInQueue()
 
 static const unsigned char ani_up     = 0x01;
 static const unsigned char ani_close  = 0x02;
-static const unsigned char ani_alpha  = 0x04;
+//static const unsigned char ani_alpha  = 0x04;
+bool ani_alpha  = false;
 static const unsigned char ani_repeat = 0x08;
 Animation::Animation()
 {
@@ -105,7 +106,10 @@ Animation::Animation( const char *FileName,
     } else {
         f.Fscanf( "%f %f", &width, &height );
         if (width > 0)
-            options |= ani_alpha;
+            {//options |= ani_alpha;
+            ani_alpha=true;
+            
+            }
         width  = fabs( width*0.5F );
         height = height*0.5F;
         Load( f, 0, ismipmapped );
@@ -313,10 +317,13 @@ void Animation::DrawAsVSSprite( VSSprite *spr )
     if (g_game.use_animations != 0 || g_game.use_textures != 0) {
         //unsigned char alphamaps=ani_alpha;
         GFXPushBlendMode();
-        if (options&ani_alpha)
+       
+        if (ani_alpha)
             GFXBlendMode( SRCALPHA, INVSRCALPHA );
         else
             GFXBlendMode( ONE, ZERO );
+         
+        
         size_t lyr;
         size_t numlayers = numLayers();
         bool multitex = (numlayers > 1);
@@ -365,7 +372,9 @@ void Animation::DrawAsVSSprite( VSSprite *spr )
 void Animation::DrawNoTransform( bool cross, bool blendoption )
 {
     bool doitagain = false;
-    if (g_game.use_animations == 0 && g_game.use_textures == 0) {} else if ( !Done() || (options&ani_repeat) ) {
+    if (g_game.use_animations == 0 && g_game.use_textures == 0)
+     {} 
+    else if ( !Done() || (options&ani_repeat) ) {
         size_t lyr;
         size_t numlayers = numLayers();
         bool  multitex  = (numlayers > 1);

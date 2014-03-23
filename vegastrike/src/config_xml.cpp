@@ -495,6 +495,7 @@ CommandMap initGlobalCommandMap()
 {
     //I don't knwo why this gives linker errors!
     CommandMap commandMap;
+    commandMap["BackToMenu"]    =CockpitKeys::Menu;// New menu by ezee
     commandMap["NoPositionalKey"]    = mute;
     commandMap["DopplerInc"] = incdop;
     commandMap["Cockpit::NavScreen"] = GameCockpit::NavScreen;

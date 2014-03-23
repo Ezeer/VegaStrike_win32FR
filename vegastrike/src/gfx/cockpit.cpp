@@ -1664,6 +1664,10 @@ GameCockpit::GameCockpit( const char *file, Unit *parent, const std::string &pil
     }
     for (i = 0; i < UnitImages< void >::NUMGAUGES; i++)
         gauges[i] = NULL;
+        //EZEE
+        /*
+        PIT[0] is the front view texture ?
+        */
     radarSprites[0] = radarSprites[1] = Pit[0] = Pit[1] = Pit[2] = Pit[3] = NULL;
 
     static bool st_draw_all_boxes =
@@ -1731,6 +1735,9 @@ void DoCockpitKeys()
 {
     CockpitKeys::Pan( KBData(), PRESS );
     CockpitKeys::Inside( KBData(), PRESS );
+    
+    
+    
 }
 
 void GameCockpit::NavScreen( const KBData&, KBSTATE k )
@@ -2640,9 +2647,13 @@ void GameCockpit::Draw()
     static bool mousecursor_chasecam =
         XMLSupport::parse_bool( vs_config->getVariable( "joystick", "mouse_cursor_chasecam", "true" ) );
     if (mouseCursor && screenshotkey == false) {
-        if ( (view == CP_PAN
-              && !mousecursor_pancam)
-            || (view == CP_PANTARGET && !mousecursor_pantgt) || (view == CP_CHASE && !mousecursor_chasecam) ) {} else {
+        if ( (view == CP_PAN && !mousecursor_pancam)
+            || (view == CP_PANTARGET && !mousecursor_pantgt) || (view == CP_CHASE && !mousecursor_chasecam) ) 
+            {
+            //Ezee say ??
+            } 
+            else 
+            {
             GFXBlendMode( SRCALPHA, INVSRCALPHA );
             GFXColor4f( 1, 1, 1, 1 );
             GFXEnable( TEXTURE0 );

@@ -66,6 +66,7 @@
 #endif
 
 extern vs_options  game_options;
+//extern game_data_t g_game;//ADDED BY EZEE FOR GAMESTATE
 
 extern std::string global_username;
 #define KEYDOWN( name, key ) (name[key]&0x80)
@@ -231,8 +232,21 @@ void TextMessageKey( const KBData&, KBSTATE newState )
         textmessager = _Universe->CurrentCockpit();
     }
 }
-void QuitNow()
+
+//could be reused with a state like enum{quit,menu)
+//okay , done
+//OLD WAS void QuitNow()
+//ezee
+
+void QuitNow(Gamestate state)
 {
+  //menu stuff
+  if(g_game.state==MENU)
+  {
+  
+  UniverseUtil::startMenuInterface(false);
+   return;
+  }
     if (!cleanexit)
     {
         cleanexit = true;
@@ -246,10 +260,19 @@ void QuitNow()
             delete forcefeedback;
             forcefeedback = NULL;
         }
-        VSExit( 0 );
+        VSExit(state);//this way we have end to menu enabled
     }
 }
-
+//NEW MENU SYSTEM BY EZEE
+void Menu(const KBData&, KBSTATE newState)
+{
+ if (newState == PRESS) 
+ {
+ g_game.state=MENU;
+ printf( "********** MENU BY EZEE ****************\n" );
+ QuitNow(g_game.state);//we should go to the menu now
+ }
+}
 void SkipMusicTrack( const KBData&, KBSTATE newState )
 {
     if (newState == PRESS) {
@@ -265,7 +288,7 @@ static void _PitchDown( KBSTATE newState, int fromCam = 0, int toCam = NUM_CAM-1
     for (int i = fromCam; i <= toCam; i++) {
         if (newState == PRESS) {
             if (QuitAllow)
-                QuitNow();
+                QuitNow(QUIT);//modified by ezee for the menu mode
             Q = _Universe->AccessCockpit()->AccessCamera( i )->Q;
             R = _Universe->AccessCockpit()->AccessCamera( i )->R;
             _Universe->AccessCockpit()->AccessCamera( i )->myPhysics.ApplyBalancedLocalTorque( -Q,
@@ -360,7 +383,7 @@ static void InitPanInside()
 void LookDown( const KBData& kbdata, KBSTATE newState )
 {
     if (newState == PRESS && QuitAllow)
-        QuitNow();
+        QuitNow(QUIT);//modified by ezee for menu
     if (newState == PRESS || newState == DOWN) {
         if (_Universe->AccessCockpit()->GetView() <= CP_RIGHT) {
             InitPanInside();
@@ -434,7 +457,8 @@ void LookRight( const KBData& kbdata, KBSTATE newState )
 
 void Quit( const KBData&, KBSTATE newState )
 {
-    if (newState == PRESS) {
+    if (newState == PRESS) 
+    {
         QuitAllow = !QuitAllow;
     }
 }

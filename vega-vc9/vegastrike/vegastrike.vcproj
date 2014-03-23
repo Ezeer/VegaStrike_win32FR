@@ -143,7 +143,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="openal32.lib glut32.lib expat.lib python27.lib wsock32.lib SDL.lib SDLmain_static.lib libvorbis_static.lib libvorbisfile_static.lib libogg_static.lib alut_static.lib zlib_static.lib libpng_static.lib"
 				ShowProgress="0"
-				OutputFile="$(OutDir)\$(ProjectName).exe"
+				OutputFile="D:\program\experimental\Data\VSU_FW32.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../lib"
 				IgnoreAllDefaultLibraries="false"
@@ -4053,6 +4053,14 @@
 				>
 				<File
 					RelativePath="..\..\vegastrike\src\aldrv\al_globals.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="AI"
+				>
+				<File
+					RelativePath="..\include\AI\readme.txt"
 					>
 				</File>
 			</Filter>
