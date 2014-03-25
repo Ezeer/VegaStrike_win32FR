@@ -250,9 +250,10 @@ void GameMenu::createLoadGameControls( GroupControl *LoadGamePage, std::vector< 
    
     StaticImageDisplay* imagebox;//will contain the art associated with a mission or quest
     imagebox=new StaticImageDisplay;//VSFileSystem::datadir+"\\textures\\noise.png"
-    imagebox->setRect(Rect::Rect(0,0,256,256));
-    std::string path(VSFileSystem::datadir+"\\textures\\noise.png");
+    imagebox->setRect(Rect::Rect(0,0,512,512));
+    std::string path(VSFileSystem::datadir+"\\textures\\basecomputer.png");
     GuiTexture*txt=new GuiTexture();
+    
     
     if(txt->read(path))
     printf("texture for load_menu loaded !");
@@ -305,7 +306,7 @@ void startMenuInterface( bool firstTime, string error )
     GFXLoop( gamemenu_draw );
 }
 
-//*******************NEW INGAME MENU BY EZEE
+//*******************NEW INGAME MENU BY EZEE ( part not used yet ! )
 void startGameMenu(bool firstTime, string error )
 {
    winsys_set_keyboard_func( gamemenu_keyboard_handler );
