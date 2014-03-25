@@ -254,8 +254,15 @@ void GameMenu::createLoadGameControls( GroupControl *LoadGamePage, std::vector< 
    
     StaticImageDisplay* imagebox;//will contain the art associated with a mission or quest
     imagebox=new StaticImageDisplay();
-    imagebox->setRect(Rect::Rect(0,0,256,256));//will be updated soon with textures info
-    std::string path("noise.png");
+    //HOW SIZE AND POS WORKS IN VS :
+    //WARNING FOR ARTISTS : The texture appear upside down ... will try to fix eh eh
+    //SAY YOU HAVE
+    // imagebox->setRect(Rect( -1, -1, 0.2, 0.2 ) )
+    //MEAN " LEFT CORNER BOTTOM , 20% of original size
+    //ezee 
+    imagebox->setRect(Rect( 0, 0, 0.5, 0.5 ) );//center of screen 50% scale
+    
+    std::string path("capture.png");
     
     imagebox->setId("imagebox");///give it a name
     //to be optimized later ok ?
@@ -271,7 +278,7 @@ void GameMenu::createLoadGameControls( GroupControl *LoadGamePage, std::vector< 
     NewButton *loadagame = new NewButton;
     loadagame->setRect( Rect( -.50, .7, .37, .09 ) );
     loadagame->setLabel( "load a game" );
-    loadagame->setCommand( "ShowJoinAccount" );
+    //loadagame->setCommand( "loadagame" );//not implemented yet
 
     loadagame->setColor( GFXColor( color.r, color.g, color.b, .25 ) );
     loadagame->setTextColor( GUI_OPAQUE_WHITE() );
