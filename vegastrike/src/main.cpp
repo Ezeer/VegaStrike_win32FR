@@ -124,7 +124,7 @@ void setup_game_data()
     g_game.MouseSensitivityX = 2;
     g_game.MouseSensitivityY = 4;
     //Ezee addon
-    g_game.state=LOAD;
+    g_game.state=QUIT;// To enable Quit in the main menu
 }
 VegaConfig * createVegaConfig( const char *file )
 {
@@ -143,10 +143,11 @@ int readCommandLineOptions(int argc, char ** argv);
 void VSExit( int code)
 {
  switch(code)
-             {case 0:
+             {
+             case 0:
               Music::CleanupMuzak();
               winsys_exit( code );break;
-              case 1:
+             case 1:
               break;
               }
               

@@ -10,6 +10,8 @@ class GameMenu : public WctlBase< GameMenu >
 public:
     virtual void init( void );
     virtual void run( void );
+    //lets do some art now with the good foundation of ace and Hellcat.
+    
 
     GameMenu( bool firsttime );
     virtual ~GameMenu( void );
@@ -24,7 +26,9 @@ protected:
     bool processExitGameButton( const EventCommandId &command, Control *control );
     bool processJoinGameButton( const EventCommandId &command, Control *control );
     bool processMainMenuButton( const EventCommandId &command, Control *control );
-
+    //processLoadGameButton added by ezee
+    bool processLoadGameButton( const EventCommandId &command, Control *control );
+    //thank you ace eh eh
     void createControls();
 
 public:
@@ -33,6 +37,17 @@ public:
 //Caller is responsible for making a return button, as well as adding the "JoinGame" WctlTableEntry
     static void createNetworkControls( GroupControl *serverConnGroup, std::vector< unsigned int > *keyboard_input_queue );
     static void readJoinGameControls( Window *window, string &user, string &pass );
+
+//Ezee sub menu following ace rules eh eh
+//when you got it that rocks !
+//" time time time is on my side ... yes it is ! " r.stones
+//anyway
+//for load game panel
+ static void createLoadGameControls( GroupControl *LoadGamePage, std::vector< unsigned int > *keyboard_input_queue );
+ //static void readJoinGameControls( Window *window, string &user, string &pass );
+
+
+
 };
 
 class NetActionConfirm : public WindowController

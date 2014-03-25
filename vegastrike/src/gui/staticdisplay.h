@@ -35,6 +35,8 @@ class Scroller;
 //Right now, it only supports text, but could be expanded to support
 //images, textures, meshes, etc.
 //This control does not respond to input events.
+//UPDATE : in 2014 we have class StaticImageDisplay : public Control
+//brice of nice eh eh
 
 class StaticDisplay : public Control
 {
@@ -142,10 +144,10 @@ public:
     }
 
 //Text that appears on the control.
-    virtual void setTexture( std::string t )
+    virtual bool setTexture( std::string t )//changed from void to bool , ezee yeah .
     {
         texturename = t;
-        texture.read( t );
+        return texture.read( t );
     }
 
 //CONSTRUCTION

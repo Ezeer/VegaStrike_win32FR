@@ -30,6 +30,7 @@ const GameMenu::WctlTableEntry WctlBase< GameMenu >::WctlCommandTable[] = {
     GameMenu::WctlTableEntry( "ExitGame",        "", &GameMenu::processExitGameButton ),
     GameMenu::WctlTableEntry( "JoinGame",        "", &GameMenu::processJoinGameButton ),
     GameMenu::WctlTableEntry( "ReturnMainMenu",  "", &GameMenu::processMainMenuButton ),
+    GameMenu::WctlTableEntry( "LoadGame",        "", &GameMenu::processLoadGameButton ),
     GameMenu::WctlTableEntry( "",                "", NULL )
 };
 
@@ -68,7 +69,7 @@ void gamemenu_draw()
     GFXEndScene();
 }
 
-//static
+//static 
 void GameMenu::createNetworkControls( GroupControl *serverConnGroup, std::vector< unsigned int > *inputqueue )
 {
     GFXColor   color( 1, .5, 0, .1 );
@@ -241,6 +242,48 @@ void GameMenu::createNetworkControls( GroupControl *serverConnGroup, std::vector
     serverConnGroup->addChild( multiStart );
 }
 
+//static 
+//New GameMenu::createLoadGameControls by ezee
+void GameMenu::createLoadGameControls( GroupControl *LoadGamePage, std::vector< unsigned int > *inputqueue )
+{
+    //rock and roll now by ezee
+   
+    StaticImageDisplay* imagebox;//will contain the art associated with a mission or quest
+    imagebox=new StaticImageDisplay;//VSFileSystem::datadir+"\\textures\\noise.png"
+    imagebox->setRect(Rect::Rect(0,0,256,256));
+    std::string path(VSFileSystem::datadir+"\\textures\\noise.png");
+    GuiTexture*txt=new GuiTexture();
+    
+    if(txt->read(path))
+    printf("texture for load_menu loaded !");
+    else;
+    printf("texture for load_menu FAILED !");
+    printf(path.c_str());
+    
+    imagebox->setId("imagebox");
+    LoadGamePage->addChild( imagebox );
+    imagebox->draw();
+    
+
+
+    GFXColor   color( 1, .5, 0, .1 );
+    //Account Server button.
+    NewButton *loadagame = new NewButton;
+    loadagame->setRect( Rect( -.50, .7, .37, .09 ) );
+    loadagame->setLabel( "load a game" );
+    loadagame->setCommand( "ShowJoinAccount" );
+
+    loadagame->setColor( GFXColor( color.r, color.g, color.b, .25 ) );
+    loadagame->setTextColor( GUI_OPAQUE_WHITE() );
+    loadagame->setDownColor( GFXColor( color.r, color.g, color.b, .5 ) );
+    loadagame->setDownTextColor( GUI_OPAQUE_BLACK() );
+    loadagame->setHighlightColor( GFXColor( color.r, color.g, color.b, .4 ) );
+    loadagame->setFont( Font( .07 ) );
+    LoadGamePage->addChild( loadagame );
+
+  
+}
+
 namespace UniverseUtil
 {
 void startMenuInterface( bool firstTime, string error )
@@ -256,11 +299,32 @@ void startMenuInterface( bool firstTime, string error )
     if ( !error.empty() ) {
         gm->window()->findControlById( "MainMenu" )->setHidden( true );
         gm->window()->findControlById( "MultiPlayerMenu" )->setHidden( false );
+         //gm->window()->findControlById( "LoadGameMenu" )->setHidden( false );
         showAlert( error );
     }
     GFXLoop( gamemenu_draw );
 }
+
+//*******************NEW INGAME MENU BY EZEE
+void startGameMenu(bool firstTime, string error )
+{
+   winsys_set_keyboard_func( gamemenu_keyboard_handler );
+   winsys_set_mouse_func( EventManager::ProcessMouseClick );
+   winsys_set_passive_motion_func( EventManager::ProcessMousePassive );
+   winsys_set_motion_func( EventManager::ProcessMouseActive );
+
+    GameMenu *gm = new GameMenu( firstTime );
+    gm->init();
+    gm->run();
+    if ( !error.empty() ) {
+        gm->window()->findControlById( "MainMenu" )->setHidden( true );
+        gm->window()->findControlById( "MultiPlayerMenu" )->setHidden( false );
+        showAlert( error );
+    }
+    GFXLoop( gamemenu_draw );
 }
+}//end of namespace UniverseUtil
+
 
 void GameMenu::init()
 {
@@ -294,7 +358,7 @@ void GameMenu::createControls()
     mainMenuGroup->addChild( baseTitle );
 
     NewButton *singlePlayer = new NewButton;
-    singlePlayer->setRect( Rect( -.75, .2, 1.5, .15 ) );
+    singlePlayer->setRect( Rect( -.75, .4, 1.5, .15 ) );
     singlePlayer->setColor( GFXColor( 0, 1, 1, .1 ) );
     singlePlayer->setTextColor( GUI_OPAQUE_WHITE() );
     singlePlayer->setDownColor( GFXColor( 0, 1, 1, .4 ) );
@@ -303,7 +367,22 @@ void GameMenu::createControls()
     singlePlayer->setCommand( "SinglePlayer" );
     singlePlayer->setLabel( "Single Player Game" );
     mainMenuGroup->addChild( singlePlayer );
-
+    
+    //add load game button by ezee
+    
+    NewButton *LoadGame = new NewButton;
+    LoadGame->setRect( Rect( -.75, .2, 1.5, .15 ) );
+    LoadGame->setColor( GFXColor( 0, 1, 1, .1 ) );
+    LoadGame->setTextColor( GUI_OPAQUE_WHITE() );
+    LoadGame->setDownColor( GFXColor( 0, 1, 1, .4 ) );
+    LoadGame->setDownTextColor( GFXColor( .2, .2, .2 ) );
+    LoadGame->setFont( Font( .07, 1 ) );
+    LoadGame->setCommand( "LoadGame" );
+    LoadGame->setLabel( "Load a scenario" );
+    mainMenuGroup->addChild( LoadGame );
+    
+    
+   
     NewButton *multiPlayer = new NewButton;
     multiPlayer->setRect( Rect( -.75, 0, 1.5, .15 ) );
     multiPlayer->setColor( GFXColor( 1, .2, 0, .1 ) );
@@ -325,6 +404,37 @@ void GameMenu::createControls()
     exitGame->setCommand( "ExitGame" );
     exitGame->setLabel( "Exit Game" );
     mainMenuGroup->addChild( exitGame );
+    
+    //create a page for the load option
+    //ezee
+    GroupControl *LoadGamePage = new GroupControl;
+    LoadGamePage->setId( "LoadGamePage" );
+    LoadGamePage->setHidden( true );
+    window()->addControl( LoadGamePage );
+  
+    //and a display title
+    StaticDisplay *LoadGamePageTitle = new StaticDisplay;
+    LoadGamePageTitle->setRect( Rect( -.96, .83, .8, .1 ) );
+    LoadGamePageTitle->setText( "Load a scenario" );
+    LoadGamePageTitle->setTextColor( baseNameColor );
+    LoadGamePageTitle->setColor( GUI_CLEAR );
+    LoadGamePageTitle->setFont( Font( .07, 2 ) );
+    LoadGamePageTitle->setId( "LoadGameTitle" );
+    //Put it on the window.
+    LoadGamePage->addChild( LoadGamePageTitle );
+    //add a button to go back
+    NewButton *returnMainMenu2 = new NewButton;
+    returnMainMenu2->setRect( Rect( .7, .81, .25, .1 ) );
+    returnMainMenu2->setColor( GFXColor( 1, .2, 0, .1 ) );
+    returnMainMenu2->setTextColor( GUI_OPAQUE_WHITE() );
+    returnMainMenu2->setDownColor( GFXColor( 1, .2, 0, .4 ) );
+    returnMainMenu2->setDownTextColor( GFXColor( .2, .2, .2 ) );
+    returnMainMenu2->setFont( Font( .07, 1 ) );
+    returnMainMenu2->setCommand( "ReturnMainMenu" );
+    returnMainMenu2->setLabel( "Done" );
+    LoadGamePage->addChild( returnMainMenu2 );
+
+
 
     GroupControl *serverConnGroup = new GroupControl;
     serverConnGroup->setId( "MultiPlayerMenu" );
@@ -364,6 +474,7 @@ void GameMenu::createControls()
     serverConnGroup->addChild( exitGame );
 
     createNetworkControls( serverConnGroup, &gamemenu_keyboard_queue );
+    createLoadGameControls(LoadGamePage, &gamemenu_keyboard_queue );
 
     //Make a tab for mode switching...
     //(Add buttons for acctserver/modname) (acctserver mode is default).
@@ -435,6 +546,7 @@ bool GameMenu::processMultiPlayerButton( const EventCommandId &command, Control 
 {
     window()->findControlById( "MainMenu" )->setHidden( true );
     window()->findControlById( "MultiPlayerMenu" )->setHidden( false );
+    window()->findControlById( "LoadGamePage" )->setHidden( true );
     return true;
 }
 
@@ -442,6 +554,15 @@ bool GameMenu::processMainMenuButton( const EventCommandId &command, Control *co
 {
     window()->findControlById( "MainMenu" )->setHidden( false );
     window()->findControlById( "MultiPlayerMenu" )->setHidden( true );
+     window()->findControlById( "LoadGamePage" )->setHidden( true );
+    return true;
+}
+
+bool GameMenu::processLoadGameButton( const EventCommandId &command, Control *control )
+{
+    window()->findControlById( "MainMenu" )->setHidden( true );
+    window()->findControlById( "MultiPlayerMenu" )->setHidden( true );
+    window()->findControlById( "LoadGamePage" )->setHidden( false );
     return true;
 }
 

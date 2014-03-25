@@ -752,7 +752,7 @@ void refreshBaseComputerUI( const Cargo *carg )
 
 void ExitGame()
 {
-    CockpitKeys::QuitNow(g_game.state   );//modified by ezee QUIT MENU MOAD RUNNING
+    CockpitKeys::QuitNow(g_game.state   );//modified by ezee QUIT MENU LOAD RUNNING
 }
 }
 
