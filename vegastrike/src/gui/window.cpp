@@ -88,6 +88,7 @@ void Window::draw( void )
 {
     drawBackground();
     m_controls->draw();
+    
 }
 
 //Draw window background.
@@ -189,10 +190,12 @@ void WindowManager::draw()
     //maintained.  First entry is the bottom window, last is the top window.
     //FIXME mbyron -- I think the event manager needs to get involved with window z-order.
     //(Mouse events should go to windows in zorder, shouldn't they?)
-    for (size_t i = 0; i < m_windows.size(); i++) {
-        if ( m_windows[i]->controller() )
-            m_windows[i]->controller()->draw();
-        if ( i < m_windows.size() ) m_windows[i]->draw();
+    for (size_t i = 0; i < m_windows.size(); i++) 
+    {
+        if ( m_windows[i]->controller() )//it's a controller
+            m_windows[i]->controller()->draw();//that can draw
+        if ( i < m_windows.size() ) 
+        m_windows[i]->draw();
     }
     //Emulate EndGUIFrame.
     static VSSprite MouseVSSprite( "mouse.spr", BILINEAR, GFXTRUE );

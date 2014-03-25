@@ -62,6 +62,7 @@ void gamemenu_keyboard_handler( unsigned int ch, unsigned int mod, bool release,
 
 void gamemenu_draw()
 {
+
     UpdateTime();
     Music::MuzakCycle();
     GFXBeginScene();
@@ -247,28 +248,26 @@ void GameMenu::createNetworkControls( GroupControl *serverConnGroup, std::vector
 void GameMenu::createLoadGameControls( GroupControl *LoadGamePage, std::vector< unsigned int > *inputqueue )
 {
     //rock and roll now by ezee
+    //not fully working yet
+    //image loading is ok 
+    //draw ops too , need more testing with formats ( .image are white ... )
    
     StaticImageDisplay* imagebox;//will contain the art associated with a mission or quest
-    imagebox=new StaticImageDisplay;//VSFileSystem::datadir+"\\textures\\noise.png"
-    imagebox->setRect(Rect::Rect(0,0,512,512));
-    std::string path(VSFileSystem::datadir+"\\textures\\basecomputer.png");
-    GuiTexture*txt=new GuiTexture();
+    imagebox=new StaticImageDisplay();
+    imagebox->setRect(Rect::Rect(0,0,256,256));//will be updated soon with textures info
+    std::string path("noise.png");
     
+    imagebox->setId("imagebox");///give it a name
+    //to be optimized later ok ?
+    if(imagebox->setTexture(path))
+    printf("texture for load_menu loaded !\n");
+    else
+    printf("texture for load_menu FAILED !\n");
     
-    if(txt->read(path))
-    printf("texture for load_menu loaded !");
-    else;
-    printf("texture for load_menu FAILED !");
-    printf(path.c_str());
+    LoadGamePage->addChild( imagebox );// add it to mama page
     
-    imagebox->setId("imagebox");
-    LoadGamePage->addChild( imagebox );
-    imagebox->draw();
-    
-
-
     GFXColor   color( 1, .5, 0, .1 );
-    //Account Server button.
+    //load button.
     NewButton *loadagame = new NewButton;
     loadagame->setRect( Rect( -.50, .7, .37, .09 ) );
     loadagame->setLabel( "load a game" );
@@ -284,7 +283,17 @@ void GameMenu::createLoadGameControls( GroupControl *LoadGamePage, std::vector< 
 
   
 }
+//by ezee for texture draw ops
+/*bool GameMenu::processWindowCommand( const EventCommandId &command, Control *control )
+{
 
+Control* c=window()->findControlById( "imagebox" );
+if (!c)
+ {printf("Drawing imagebox FAILED!\n");
+ }
+ else {c->draw();printf("Drawing imagebox SUCCESS!\n");}
+return true;
+}*/
 namespace UniverseUtil
 {
 void startMenuInterface( bool firstTime, string error )
@@ -300,7 +309,7 @@ void startMenuInterface( bool firstTime, string error )
     if ( !error.empty() ) {
         gm->window()->findControlById( "MainMenu" )->setHidden( true );
         gm->window()->findControlById( "MultiPlayerMenu" )->setHidden( false );
-         //gm->window()->findControlById( "LoadGameMenu" )->setHidden( false );
+        //gm->window()->findControlById( "LoadGameMenu" )->setHidden( false );
         showAlert( error );
     }
     GFXLoop( gamemenu_draw );

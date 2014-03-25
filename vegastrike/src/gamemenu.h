@@ -11,6 +11,10 @@ public:
     virtual void init( void );
     virtual void run( void );
     //lets do some art now with the good foundation of ace and Hellcat.
+    //we need to refresh the draw function
+    //Process a command event from the window. Ezee
+    //virtual bool processWindowCommand( const EventCommandId &command, Control *control );
+
     
 
     GameMenu( bool firsttime );
