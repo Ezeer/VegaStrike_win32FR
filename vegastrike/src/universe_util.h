@@ -427,7 +427,7 @@ bool isSplashScreenShowing();
 //Defined in gamemenu.cpp for vegastrike, universe_util_server.cpp for vegaserver.
 void startMenuInterface( bool firsttime, string alert = string() );         //If game fails, bring it back to a common starting point.
 //ingame menu by ezee
-void startGameMenu( bool firsttime, string alert = string() );  
+//void startGameMenu( bool firsttime, string alert = string() );  
 }
 
 #undef activeSys

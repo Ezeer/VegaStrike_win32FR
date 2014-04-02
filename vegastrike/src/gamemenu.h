@@ -4,6 +4,9 @@
 #include "gui/windowcontroller.h"
 #include "gui/simplepicker.h"
 
+//made extern by ezee
+extern void gamemenu_keyboard_handler( unsigned int ch, unsigned int mod, bool release, int x, int y );
+
 class GameMenu : public WctlBase< GameMenu >
 {
     friend class WctlBase< GameMenu >;
@@ -23,17 +26,18 @@ public:
 protected:
     bool m_firstTime;
 
-    bool processSinglePlayerButton( const EventCommandId &command, Control *control );
-    bool processMultiPlayerHostButton( const EventCommandId &command, Control *control );
-    bool processMultiPlayerAcctButton( const EventCommandId &command, Control *control );
-    bool processMultiPlayerButton( const EventCommandId &command, Control *control );
-    bool processExitGameButton( const EventCommandId &command, Control *control );
-    bool processJoinGameButton( const EventCommandId &command, Control *control );
-    bool processMainMenuButton( const EventCommandId &command, Control *control );
+    virtual bool processSinglePlayerButton( const EventCommandId &command, Control *control );
+    virtual bool processMultiPlayerHostButton( const EventCommandId &command, Control *control );
+    virtual bool processMultiPlayerAcctButton( const EventCommandId &command, Control *control );
+    virtual bool processMultiPlayerButton( const EventCommandId &command, Control *control );
+    virtual bool processExitGameButton( const EventCommandId &command, Control *control );
+    virtual bool processJoinGameButton( const EventCommandId &command, Control *control );
+    virtual bool processMainMenuButton( const EventCommandId &command, Control *control );
     //processLoadGameButton added by ezee
-    bool processLoadGameButton( const EventCommandId &command, Control *control );
-    //thank you ace eh eh
-    void createControls();
+    virtual bool processLoadGameButton( const EventCommandId &command, Control *control );
+    virtual bool processLoadGameMenuButton( const EventCommandId &command, Control *control );
+    virtual bool processNewGameButton ( const EventCommandId &command, Control *control ); 
+    virtual void createControls();
 
 public:
 //Helper functions for use in a submenu of BaseComputer.
@@ -47,7 +51,7 @@ public:
 //" time time time is on my side ... yes it is ! " r.stones
 //anyway
 //for load game panel
- static void createLoadGameControls( GroupControl *LoadGamePage, std::vector< unsigned int > *keyboard_input_queue );
+ //static void createLoadGameControls( GroupControl *LoadGamePage, std::vector< unsigned int > *keyboard_input_queue );
  //static void readJoinGameControls( Window *window, string &user, string &pass );
 
 

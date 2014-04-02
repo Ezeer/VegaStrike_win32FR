@@ -197,6 +197,10 @@ bool CallbackWorker_Backspace( unsigned int ch,GameCockpit *gcp)
 
 bool CallbackWorker_Enter( unsigned int ch,GameCockpit *gcp)
 {
+/* example of format for python
+ PyRun_SimpleString(
+        "import VS\nVS.loading_active_missions=True\nprint \"Loading active missions \"+str(VS.loading_active_missions)\n" );
+   */
 if (ch == WSK_RETURN || ch == WSK_KP_ENTER)
  {
   if (gcp->textMessage.length() != 0) 
@@ -218,6 +222,11 @@ if (ch == WSK_RETURN || ch == WSK_KP_ENTER)
            std::string::size_type space = gcp->textMessage.find( ' ' );
            if (space) 
                       {
+                      // The substring is the portion of the object that starts 
+                      // at character position pos and spans len characters 
+                      // (or until the end of the string, whichever comes first).
+                      // Note: The first character is denoted by a value of 0 (not 1).
+                      
                         cmd  = gcp->textMessage.substr( 1, space-1 );
                         args = gcp->textMessage.substr( space+1 );
                       } 
@@ -226,13 +235,18 @@ if (ch == WSK_RETURN || ch == WSK_KP_ENTER)
                         cmd = gcp->textMessage.substr( 1 );
                         //Send custom message to itself.
                       }
+                      printf("CONSOLE TESt By Ezee :");
+                      printf("cmd= %s,args= %s",cmd.c_str(),args.c_str() );
+                    
                     UniverseUtil::receivedCustom( textmessager, true, cmd, args, string() );
                 }
                 waszero = false;
            } 
            else 
            {waszero = true; 
-           } 
+           }  
+           
+          
            gcp->textMessage = "";
  } 
      return waszero;//always enter 

@@ -55,7 +55,8 @@
 #include "gfx/masks.h"
 #include "cmd/music.h"
 #include "ship_commands.h"
-#include "gamemenu.h"
+//#include "gamemenu.h" deprecated by ezee , use ingamemenu now
+#include "ingamemenu.h"
 
 
 #include "audio/SceneManager.h"
@@ -489,6 +490,7 @@ void bootstrap_first_loop()
     static int  i = 0;
     static std::string ss  = vs_config->getVariable( "graphics", "splash_screen", "vega_splash.ani" );
     static std::string sas = vs_config->getVariable( "graphics", "splash_audio", "" );
+    //the var is actually missing in vegastrike.config today march 2014
     static bool isgamemenu = XMLSupport::parse_bool( vs_config->getVariable( "graphics", "main_menu", "false" ) );
     if (i == 0) {
         vector< string >s  = parse_space_string( ss );
@@ -515,11 +517,13 @@ void SetStartupView( Cockpit *cp )
                 == "view_target" ? CP_TARGET : ( startupview
                                                 == "back" ? CP_BACK : (startupview == "chase" ? CP_CHASE : CP_FRONT) ) );
 }
+
 void bootstrap_main_loop()
 {
     static bool LoadMission  = true;
     static bool loadLastSave = XMLSupport::parse_bool( vs_config->getVariable( "general", "load_last_savegame", "false" ) );
     InitTime();
+    //first init loop ,ezee
     if (LoadMission) {
         LoadMission = false;
         active_missions.push_back( mission = new Mission( mission_name ) );
@@ -527,7 +531,7 @@ void bootstrap_main_loop()
         mission->initMission();
 
         UniverseUtil::showSplashScreen( "" );         //Twice for double or triple-buffering
-        UniverseUtil::showSplashScreen( "" );
+        UniverseUtil::showSplashScreen( "" );         //?? ,ezee
 
         QVector pos;
         string  planetname;

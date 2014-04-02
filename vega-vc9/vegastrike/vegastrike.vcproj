@@ -116,7 +116,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="false"
-				AdditionalIncludeDirectories="../;../include;../include/python;&quot;../jpeg-6b&quot;;../../vegastrike/src;../../vegastrike/src/cmd;../../vegastrike/src/cmd/collide2;../../vegastrike/src/python;../../vegastrike/boost/1_45;../../vegastrike/boost/1_45/boost"
+				AdditionalIncludeDirectories="D:\program\VegaStrike_win32FR\vegastrike\src\gui;../;../include;../include/python;&quot;../jpeg-6b&quot;;../../vegastrike/src;../../vegastrike/src/cmd;../../vegastrike/src/cmd/collide2;../../vegastrike/src/python;../../vegastrike/boost/1_45;../../vegastrike/boost/1_45/boost"
 				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;HAVE_AL;HAVE_SDL;YY_ALWAYS_INTERACTIVE;SDL_WINDOWING;HAVE_OGG;HAVE_BOOST;HAVE_PYTHON;JPEG_SUPPORT;BOOST_PYTHON_NO_PY_SIGNATURES;BOOST_PYTHON_STATIC_LIB;BOOST_ALL_NO_LIB;NV_CUBE_MAP;OPCODE_COLLIDER;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -1803,6 +1803,14 @@
 					RelativePath="..\..\vegastrike\src\gui\windowcontroller.cpp"
 					>
 				</File>
+				<Filter
+					Name="InGameMenu"
+					>
+					<File
+						RelativePath="..\..\vegastrike\src\gui\ingamemenu.cpp"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Gfx"
@@ -3567,6 +3575,14 @@
 					RelativePath="..\..\vegastrike\src\gui\windowcontroller.h"
 					>
 				</File>
+				<Filter
+					Name="InGameMenu"
+					>
+					<File
+						RelativePath="..\..\vegastrike\src\gui\ingamemenu.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Python"
